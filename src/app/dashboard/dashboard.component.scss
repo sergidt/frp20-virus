@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  top: 100px;
+  color: white;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  .dashboard-header {
+    display: flex;
+
+    img {
+      margin-left: 50px;
+      max-width: 150px;
+      mix-blend-mode: soft-light;
+      animation: rotation 60s infinite linear;
+    }
+
+    .title {
+      letter-spacing: 20px;
+      font-weight: bolder;
+      color: #FAFAFA;
+      top: 300px;
+      width: 100%;
+      text-align: center;
+      font-size: 80px;
+      mix-blend-mode: hard-light;
+      opacity: .7;
+      animation: glowing 2s infinite;
+    }
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes glowing {
+  0% {
+    text-shadow: 0 0 5px white;
+  }
+  50% {
+    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 30px #a355d9, 0 0 35px #a355d9;
+  }
+  100% {
+    text-shadow: 0 0 5px white;
+  }
+}
