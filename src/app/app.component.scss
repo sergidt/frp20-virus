@@ -1,0 +1,53 @@
+:host {
+  height: 100vh;
+  background: #000;
+
+  .menu {
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 40px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: lighter;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.5);
+
+    .menu-entry {
+      display: block;
+      cursor: pointer;
+      line-height: 60px;
+      margin: 0 40px;
+      width: 120px;
+
+      &.entry-selected {
+        border-bottom: solid 4px white;
+      }
+    }
+  }
+
+  section {
+    height: 100vh;
+    background: #000;
+  }
+
+  section:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom, #808dff, #a86896, #a06c8f, #4a0220);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+
+  video {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+}

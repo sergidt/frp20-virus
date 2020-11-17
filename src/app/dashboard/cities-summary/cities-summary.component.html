@@ -1,0 +1,19 @@
+<div class="summary">
+  <div class="boxes-title">CIUDADES</div>
+  <div class="boxes">
+    <div class="box">
+      <span class="box-title">INFECTADAS</span>
+      <span class="box-value">{{citiesInfo?.affectedCities}} / {{citiesInfo?.totalCities}}</span>
+    </div>
+
+    <div class="box">
+      <span class="box-title">AFECTACIÓN POR CIUDADES</span>
+      <span class="box-value">{{citiesInfo?.citiesInvolvement | percent:'1.2'}}</span>
+    </div>
+
+    <div class="box">
+      <span class="box-title">AFECTACIÓN POR POBLACIÓN</span>
+      <span class="box-value">{{citiesInfo?.populationInvolvement | percent:'1.2'}}</span>
+    </div>
+  </div>
+</div>

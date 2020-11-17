@@ -124,5 +124,8 @@
       }
     }
   },
-  "defaultProject": "frp20-virus"
+  "defaultProject": "frp20-virus",
+  "cli": {
+    "analytics": false
+  }
 }
