@@ -25,13 +25,13 @@ export function generateCity(city: Partial<City>): City {
 }
 
 export function alterCities(cities: Array<City>): Array<City> {
-    const city: City = cities[Math.floor(randomValue(0, cities.length - 1))];
+    const city: City = cities[Math.floor(randomValue(0, cities.length - 1, 0))];
     const cure: boolean = Math.random() < PROBABILITY_OF_CURE;
 
     const vaccinated = Math.min(city.vaccinated + calculateVaccinated(city), city.population);
-    const infected = city.infected + Math.min(calculateInfected(city, cure, vaccinated), city.population);
+    const infected = Math.min(calculateInfected(city, cure, vaccinated), city.population);
     const deaths = city.deaths + Math.min(calculateDeaths(city, cure), infected);
-
+   
     return [
         ...cities.filter(_ => _.city !== city.city),
         {
@@ -51,12 +51,14 @@ const calculateDeaths = (city: City, cure: boolean): number => cure
 const calculateInfected = (city: City, cure: boolean, vaccinated: number): number => {
     const vaccinatedPercent = (vaccinated / city.infected) || 0;
 
-    return vaccinatedPercent > 0.70
-        ? -Math.ceil(city.infected * VACCINATED_PERCENTAGE_INCREMENT)
-        : Math.ceil((city.infected || 1) * INFECTED_PERCENTAGE_INCREMENT);
+    return vaccinatedPercent > 0.60
+        ? Math.max(0, city.infected - Math.floor(city.infected * VACCINATED_PERCENTAGE_INCREMENT))
+        : city.infected + Math.ceil((city.infected || 1) * INFECTED_PERCENTAGE_INCREMENT);
 };
 
 const calculateVaccinated = (city: City): number =>
     city.infected
         ? Math.ceil((city.vaccinated || 1) * VACCINATED_PERCENTAGE_INCREMENT)
         : 0;
+
+export const byInfectedPeople = (a: City, b: City) => b.infected - a.infected;

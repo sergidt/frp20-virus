@@ -6,3 +6,46 @@ html, body {
 }
 
 
+.summary-title {
+  font-size: 40px;
+}
+
+.counters {
+  box-sizing: content-box;
+  gap: 20px;
+
+  .counter-line {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-bottom: solid 1px rgb(255 255 255 / 22%);
+    align-items: center;
+
+    .box-title {
+      font-weight: lighter;
+      font-size: 18px;
+      width: 40%;
+    }
+
+    .box-value {
+      width: 60%;
+      text-align: right;
+      font-size: 28px;
+    }
+  }
+}
+
+::-webkit-scrollbar-track {
+  width: 8px;
+  background-color: rgb(153 153 153 / 60%);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: rgb(153 153 153 / 60%);
+}
+
+::-webkit-scrollbar-thumb {
+  width: 8px;
+  background-color: rgb(255 255 255 / 60%);
+}

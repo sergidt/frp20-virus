@@ -20,4 +20,6 @@ export interface CitiesInfo {
     citiesInvolvement: number;
     totalCities: number;
     populationInvolvement: number;
+    deaths: number;
+    population: number;
 }

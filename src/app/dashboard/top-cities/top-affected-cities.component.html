@@ -1,0 +1,15 @@
+<div class="summary-title">TOP 10 CON MÁS INFECTADOS</div>
+<div class="headers">
+  <div class="header">POBLACIÓN</div>
+  <div class="header">INFECCIONES</div>
+  <div class="header">MUERTES</div>
+</div>
+<div class="list">
+  <div class="affected-city"
+       *ngFor="let city of top10InfectedCities; trackBy: trackByCityName">
+    <div class="name">{{city.city}} ({{city.country}})</div>
+    <div class="population">{{city.population}}</div>
+    <div class="infected">{{city.infected}}</div>
+    <div class="deaths">{{city.deaths}}</div>
+  </div>
+</div>

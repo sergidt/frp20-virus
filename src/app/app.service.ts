@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, interval, Observable, of } from 'rxjs';
-import { concatMap, delay, map, pairwise, pluck, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, interval, Observable, of } from 'rxjs';
+import { concatMap, delay, map, pairwise, pluck, startWith, switchMap } from 'rxjs/operators';
 import citiesFromJSON from '../assets/cities.json';
 import { CitiesInfo, City, Summary } from './definitions';
-import { alterCities, generateCity, randomValue } from './utils';
+import { alterCities, byInfectedPeople, generateCity, randomValue } from './utils';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppService {
     readonly _cities$: BehaviorSubject<Array<City>>;
+    readonly numCities: number;
 
     constructor() {
         this._cities$ = new BehaviorSubject(this.generateInitialInfo());
+        this.numCities = this._cities$.getValue().length;
 
         this.startSimulation();
     }
@@ -22,16 +24,23 @@ export class AppService {
                    .pipe(map(getSummary));
     }
 
+    get top10InfectedCities$(): Observable<Array<City>> {
+        return this._cities$
+                   .pipe(map(cities => cities.sort(byInfectedPeople).filter(_ => _.infected > 0).slice(0, 5)));
+    }
+
     get citiesInfo$(): Observable<CitiesInfo> {
-        return combineLatest([this.counters$, this._cities$])
-            .pipe(
-                map(([counters, cities]: [Summary, Array<City>]) => ({
-                    affectedCities: counters.affectedCities,
-                    citiesInvolvement: counters.affectedCities / cities.length,
-                    totalCities: cities.length,
-                    populationInvolvement: counters.infected / counters.population
-                }))
-            );
+        return this.counters$
+                   .pipe(
+                       map((counters: Summary) => ({
+                           affectedCities: counters.affectedCities,
+                           citiesInvolvement: counters.affectedCities / this.numCities,
+                           totalCities: this.numCities,
+                           populationInvolvement: counters.infected / counters.population,
+                           population: counters.population,
+                           deaths: counters.deaths
+                       }))
+                   );
     }
 
     get propagation$(): Observable<number> {
@@ -40,7 +49,7 @@ export class AppService {
                        pluck('infected'),
                        pairwise(),
                        map(([previous, current]: [number, number]) => current / previous),
-                       tap(console.log)
+                       startWith(0)
                    );
     }
 
