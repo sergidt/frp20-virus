@@ -1,6 +1,17 @@
-import { City } from './definitions';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { CitiesChange, City } from './definitions';
 
 export const randomValue = (min: number, max: number, seed: number = 0.5) => Math.random() > seed ? Math.random() * (max - min) + min : 0;
+
+const generateUID = (): string => {
+    let d = new Date().getTime();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+};
 
 const INITIAL_INFECTED_PERCENTAGE = 0.3;
 const INITIAL_DEATHS_PERCENTAGE = 0.01;
@@ -24,24 +35,26 @@ export function generateCity(city: Partial<City>): City {
     } as City;
 }
 
-export function alterCities(cities: Array<City>): Array<City> {
-    const city: City = cities[Math.floor(randomValue(0, cities.length - 1, 0))];
+export function alterCity(cities: Array<City>): CitiesChange {
+    let change: City = { ...cities[Math.floor(randomValue(0, cities.length - 1, 0))] };
     const cure: boolean = Math.random() < PROBABILITY_OF_CURE;
 
-    const vaccinated = Math.min(city.vaccinated + calculateVaccinated(city), city.population);
-    const infected = Math.min(calculateInfected(city, cure, vaccinated), city.population);
-    const deaths = city.deaths + Math.min(calculateDeaths(city, cure), infected);
-   
-    return [
-        ...cities.filter(_ => _.city !== city.city),
-        {
-            ...city,
-            infected,
-            deaths,
-            vaccinated,
-            population: city.population - deaths
-        }
-    ];
+    const vaccinated = Math.min(change.vaccinated + calculateVaccinated(change), change.population);
+    const infected = Math.min(calculateInfected(change, cure, vaccinated), change.population);
+    const deaths = change.deaths + Math.min(calculateDeaths(change, cure), infected);
+
+    change = {
+        ...change,
+        infected,
+        deaths,
+        vaccinated,
+        population: change.population - deaths
+    };
+
+    return {
+        cities: [...cities.filter(_ => _.city !== change.city), change],
+        change
+    };
 }
 
 const calculateDeaths = (city: City, cure: boolean): number => cure
@@ -62,3 +75,8 @@ const calculateVaccinated = (city: City): number =>
         : 0;
 
 export const byInfectedPeople = (a: City, b: City) => b.infected - a.infected;
+
+// OPERATORS
+
+export const filterNotNulls = () => (source$: Observable<any>) => source$
+    .pipe(filter(_ => !!_));

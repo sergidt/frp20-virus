@@ -9,6 +9,8 @@ export interface City {
     deaths: number;
 }
 
+export type CityMarker = Pick<City, 'city' | 'lat' | 'lng'> & { id: string };
+
 export type CityCounters = Pick<City, 'vaccinated' | 'infected' | 'deaths' | 'population'>;
 
 export interface Summary extends CityCounters {
@@ -22,4 +24,9 @@ export interface CitiesInfo {
     populationInvolvement: number;
     deaths: number;
     population: number;
+}
+
+export interface CitiesChange {
+    cities: Array<City>;
+    change?: City;
 }

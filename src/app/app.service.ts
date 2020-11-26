@@ -1,32 +1,58 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, Observable, of } from 'rxjs';
-import { concatMap, delay, map, pairwise, pluck, startWith, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, from, interval, Observable, of, timer } from 'rxjs';
+import {
+    concatMap, delay, groupBy, map, mergeMap, pairwise, pluck, repeatWhen, scan, shareReplay, startWith, switchMap, throttleTime
+} from 'rxjs/operators';
 import citiesFromJSON from '../assets/cities.json';
-import { CitiesInfo, City, Summary } from './definitions';
-import { alterCities, byInfectedPeople, generateCity, randomValue } from './utils';
+import { CitiesChange, CitiesInfo, City, CityMarker, Summary } from './definitions';
+import { alterCity, byInfectedPeople, filterNotNulls, generateCity, randomValue } from './utils';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppService {
-    readonly _cities$: BehaviorSubject<Array<City>>;
     readonly numCities: number;
+    private readonly _citiesChange$: BehaviorSubject<CitiesChange>;
+    private _cityMarkers: BehaviorSubject<Array<CityMarker>> = new BehaviorSubject<Array<CityMarker>>([]);
 
     constructor() {
-        this._cities$ = new BehaviorSubject(this.generateInitialInfo());
-        this.numCities = this._cities$.getValue().length;
+        this._citiesChange$ = new BehaviorSubject({ cities: this.generateInitialInfo() });
+        this.numCities = this._citiesChange$.getValue().cities.length;
+        this._citiesChange$
+            .pipe(
+                pluck('cities'),
+                mergeMap(cities => from(cities.filter(_ => !!_.infected))),
+                groupBy((city: City) => city.country),
+                mergeMap(group$ => group$.pipe(scan((acc, cur: City) => (
+                    {
+                        ...acc,
+                        [cur.country]: [...new Set([...(acc[cur.country] || []), cur.city])]
+                    }
+                ), {}))),
+                throttleTime(5000)
+            )
+            .subscribe(_ => {
+                console.clear();
+                console.log(`[${ new Date().getMinutes() }:${ new Date().getSeconds() }]`, _);
+            });
 
         this.startSimulation();
     }
 
+    get cities$(): Observable<Array<City>> {
+        return this._citiesChange$
+                   .pipe(pluck('cities'),
+                       shareReplay({ refCount: true }));
+    }
+
     get counters$(): Observable<Summary> {
-        return this._cities$
+        return this.cities$
                    .pipe(map(getSummary));
     }
 
     get top10InfectedCities$(): Observable<Array<City>> {
-        return this._cities$
-                   .pipe(map(cities => cities.sort(byInfectedPeople).filter(_ => _.infected > 0).slice(0, 5)));
+        return this.cities$
+                   .pipe(map(cities => cities.sort(byInfectedPeople).filter(_ => _.infected > 0).slice(0, 10)));
     }
 
     get citiesInfo$(): Observable<CitiesInfo> {
@@ -53,6 +79,15 @@ export class AppService {
                    );
     }
 
+    get affectedCity$(): Observable<City> {
+        return this._citiesChange$
+                   .pipe(
+                       pluck('change'),
+                       filterNotNulls(),
+                       mergeMap(_ => of(_).pipe(repeatWhen(() => timer(2000))))
+                   );
+    }
+
     private generateInitialInfo(): Array<City> {
         return citiesFromJSON.map(generateCity);
     }
@@ -65,9 +100,10 @@ export class AppService {
                     interval(500)
                         .pipe(
                             concatMap(_ => of(_).pipe(delay(randomValue(0, 1000, 0)))),
-                            map(() => alterCities(this._cities$.getValue()))
+                            map(() => alterCity(this._citiesChange$.getValue().cities)),
+                            //  tap(_ => console.log('citiesCHange', _))
                         )))
-            .subscribe(this._cities$);
+            .subscribe(this._citiesChange$);
     }
 }
 

@@ -1,30 +1,38 @@
 :host {
-  p.slogan {
+  .vertical-content {
+    display: flex;
+    flex-direction: column;
     position: absolute;
-    top: 150px;
+    top: 200px;
     width: 100%;
-    text-align: center;
-    color: white;
-    font-size: 30px;
-  }
+    justify-content: center;
+    align-content: center;
 
-  .title {
-    letter-spacing: 20px;
-    font-weight: bolder;
-    position: absolute;
-    color: #cbcbcb;
-    text-shadow: #FFF 0px 0px 5px, #FFF 0px 0px 5px, #FFF 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 20px;
-    top: 300px;
-    width: 100%;
-    text-align: center;
-    font-size: 160px;
-    mix-blend-mode: hard-light;
-    opacity: .7;
-  }
+    p.slogan {
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 30px;
+    }
 
-  app-home-summary {
-    position: absolute;
-    top: 700px;
+    .title {
+      letter-spacing: 20px;
+      font-weight: bolder;
+      color: #cbcbcb;
+      text-shadow: #FFF 0px 0px 5px, #FFF 0px 0px 5px, #FFF 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 5px, #ffffff 0px 0px 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 160px;
+      mix-blend-mode: hard-light;
+      opacity: .7;
+    }
+
+    .virus {
+      margin-left: 50px;
+      width: 350px;
+      mix-blend-mode: hard-light;
+      animation: rotation 60s infinite linear;
+    }
   }
 
   img.zombie {

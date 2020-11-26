@@ -1,3 +1,5 @@
+@import "~leaflet/dist/leaflet.css";
+
 html, body {
   padding: 0;
   margin: 0;
@@ -18,7 +20,7 @@ html, body {
     width: 100%;
     display: flex;
     justify-content: center;
-    border-bottom: solid 1px rgb(255 255 255 / 22%);
+    border-bottom: solid 1px rgb(255 255 255);
     align-items: center;
 
     .box-title {
@@ -48,4 +50,48 @@ html, body {
 ::-webkit-scrollbar-thumb {
   width: 8px;
   background-color: rgb(255 255 255 / 60%);
+}
+
+
+.pulse_ring {
+  border: 3px solid #c60d0d;
+  border-radius: 30px;
+  height: 18px;
+  width: 18px;
+  animation: pulsate 1s ease-out infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(0.1, 0.1);
+    opacity: 0.0;
+  }
+  50% {
+    opacity: 1.0;
+  }
+  100% {
+    transform: scale(1.2, 1.2);
+    opacity: 0.0;
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes glowing {
+  0% {
+    text-shadow: 0 0 5px white;
+  }
+  50% {
+    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 30px #a355d9, 0 0 35px #a355d9;
+  }
+  100% {
+    text-shadow: 0 0 5px white;
+  }
 }

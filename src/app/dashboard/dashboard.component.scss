@@ -1,5 +1,4 @@
 :host {
-  display: block;
   z-index: 100;
   height: 100%;
   width: 100%;
@@ -33,25 +32,16 @@
       animation: glowing 2s infinite;
     }
   }
+
+  .summaries {
+    display: flex;
+    width: 100%;
+    gap: 50px;
+
+    counters-summary, cities-summary {
+      width: 50%;
+    }
+  }
 }
 
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
 
-@keyframes glowing {
-  0% {
-    text-shadow: 0 0 5px white;
-  }
-  50% {
-    text-shadow: 0 0 5px #FFF, 0 0 10px #FFF, 0 0 30px #a355d9, 0 0 35px #a355d9;
-  }
-  100% {
-    text-shadow: 0 0 5px white;
-  }
-}

@@ -7,13 +7,8 @@
     </div>
 
     <div class="counter-line">
-      <span class="box-title">AFECTACIÓN POR CIUDADES</span>
-      <span class="box-value">{{citiesInfo?.citiesInvolvement | percent:'1.2'}}</span>
-    </div>
-
-    <div class="counter-line">
-      <span class="box-title">AFECTACIÓN POR POBLACIÓN</span>
-      <span class="box-value">{{citiesInfo?.populationInvolvement | percent:'1.2'}}</span>
+      <span class="box-title">AFECTACIÓN POR CIUDADES / POR POBLACIÓN</span>
+      <span class="box-value">{{citiesInfo?.citiesInvolvement | percent:'1.2'}} / {{citiesInfo?.populationInvolvement | percent:'1.2'}}</span>
     </div>
 
     <div class="counter-line">
