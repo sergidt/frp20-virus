@@ -1,0 +1,15 @@
+<div class="summary-title">INFECCIONES POR PAÍS</div>
+<div class="headers">
+  <div class="header"
+       [style.width.px]="250">ÚLTIMA ACTUALIZACIÓN: {{updateTimestamp | date:'mediumTime'}}</div>
+  <div class="header">NÚMERO DE CIUDADES</div>
+</div>
+<cdk-virtual-scroll-viewport itemSize="10"
+                             itemSize="36"
+                             class="list">
+  <div class="row"
+       *cdkVirtualFor="let country of summaryByCountries; trackBy: trackByFunction">
+    <div class="name">{{country[0]}}</div>
+    <div class="field">{{country[1].length}}</div>
+  </div>
+</cdk-virtual-scroll-viewport>

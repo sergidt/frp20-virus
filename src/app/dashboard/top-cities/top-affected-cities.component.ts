@@ -5,7 +5,7 @@ import { City } from '../../definitions';
 @Component({
     selector: 'top-affected-cities',
     templateUrl: './top-affected-cities.component.html',
-    styleUrls: ['./top-affected-cities.component.scss'],
+    styleUrls: ['../lists-components.scss', './top-affected-cities.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopAffectedCitiesComponent implements OnInit {

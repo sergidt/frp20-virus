@@ -36,9 +36,9 @@
   .summaries {
     display: flex;
     width: 100%;
-    gap: 50px;
+    gap: 30px;
 
-    counters-summary, cities-summary {
+    > * {
       width: 50%;
     }
   }

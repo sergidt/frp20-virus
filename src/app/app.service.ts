@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, interval, Observable, of, timer } from 'rxjs';
 import {
-    concatMap, delay, groupBy, map, mergeMap, pairwise, pluck, repeatWhen, scan, shareReplay, startWith, switchMap, throttleTime
+    concatMap, delay, map, mergeMap, pairwise, pluck, repeatWhen, scan, shareReplay, startWith, switchMap, throttleTime
 } from 'rxjs/operators';
 import citiesFromJSON from '../assets/cities.json';
-import { CitiesChange, CitiesInfo, City, CityMarker, Summary } from './definitions';
+import { CitiesChange, CitiesInfo, City, CityMarker, Summary, SummaryByCountries } from './definitions';
 import { alterCity, byInfectedPeople, filterNotNulls, generateCity, randomValue } from './utils';
 
 @Injectable({
@@ -18,24 +18,6 @@ export class AppService {
     constructor() {
         this._citiesChange$ = new BehaviorSubject({ cities: this.generateInitialInfo() });
         this.numCities = this._citiesChange$.getValue().cities.length;
-        this._citiesChange$
-            .pipe(
-                pluck('cities'),
-                mergeMap(cities => from(cities.filter(_ => !!_.infected))),
-                groupBy((city: City) => city.country),
-                mergeMap(group$ => group$.pipe(scan((acc, cur: City) => (
-                    {
-                        ...acc,
-                        [cur.country]: [...new Set([...(acc[cur.country] || []), cur.city])]
-                    }
-                ), {}))),
-                throttleTime(5000)
-            )
-            .subscribe(_ => {
-                console.clear();
-                console.log(`[${ new Date().getMinutes() }:${ new Date().getSeconds() }]`, _);
-            });
-
         this.startSimulation();
     }
 
@@ -43,6 +25,19 @@ export class AppService {
         return this._citiesChange$
                    .pipe(pluck('cities'),
                        shareReplay({ refCount: true }));
+    }
+
+    get summaryByCountries$(): Observable<SummaryByCountries> {
+        return this.cities$
+                   .pipe(
+                       mergeMap(cities => from(cities.filter(_ => !!_.infected))),
+                       scan((acc, cur: City) => ({
+                           ...acc,
+                           [cur.country]: [...new Set([...(acc[cur.country] || []), cur.city])]
+                       }), {}),
+                       map(_ => ({ ..._, updateTimestamp: new Date().getTime() } as SummaryByCountries)),
+                       throttleTime(5000)
+                   );
     }
 
     get counters$(): Observable<Summary> {
@@ -101,7 +96,6 @@ export class AppService {
                         .pipe(
                             concatMap(_ => of(_).pipe(delay(randomValue(0, 1000, 0)))),
                             map(() => alterCity(this._citiesChange$.getValue().cities)),
-                            //  tap(_ => console.log('citiesCHange', _))
                         )))
             .subscribe(this._citiesChange$);
     }

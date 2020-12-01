@@ -1,3 +1,7 @@
+export interface Dictionary {
+    [key: string]: Array<string>;
+}
+
 export interface City {
     city: string;
     lat: number;
@@ -30,3 +34,7 @@ export interface CitiesChange {
     cities: Array<City>;
     change?: City;
 }
+
+export type SummaryByCountries = Dictionary & {
+    updateTimestamp: number;
+};

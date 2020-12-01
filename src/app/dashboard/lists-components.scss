@@ -1,0 +1,51 @@
+:host {
+  margin-left: 20px;
+
+  .headers {
+    width: calc(100% - 25px);
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 10px;
+
+    .empty {
+      width: 34%;
+    }
+
+    .header {
+      width: 22%;
+      text-align: right;
+    }
+  }
+
+  .list {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 410px;
+    overflow-y: auto;
+    width: 100%;
+
+    .row {
+      border-radius: 8px;
+      background-color: rgb(74 2 32 / 32%);
+      padding: 5px 10px;
+      border: solid 1px rgb(255 255 255 / 22%);
+      display: flex;
+      align-items: center;
+      width: calc(100% - 25px);
+      font-weight: lighter;
+      font-size: 16px;
+      margin-bottom: 5px;
+
+      .name {
+        width: 100%;
+      }
+
+      .field {
+        min-width: 22%;
+        text-align: right;
+      }
+    }
+  }
+}
